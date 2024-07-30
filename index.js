@@ -42,11 +42,16 @@ app.get("/", (req, res) => {
 });
 
 app.post("/ask", async (req, res) => {
-  //   console.log(req.body);
   const { question, transcript, token } = req.body;
-  console.log(question, "question");
-  console.log(token, "token");
-  const prompt = `Here is the YouTube video transcript: "${transcript?.transcript?.transcript}". Answer the following question concisely : "${question}"`;
+  const prompt = `Based on the content of this YouTube video: "${transcript?.transcript?.transcript}", please answer the following question concisely: "${question}"
+
+If there isn't enough information to answer the question directly, please respond in one of these ways:
+1. Share a relevant fact or piece of information from the video that's closest to addressing the question.
+2. Politely explain that the video doesn't seem to cover this topic, and suggest what the video might be about based on the available content.
+3. Gently ask the user to rephrase their question or suggest asking about a topic that appears to be covered in the video.
+
+Always maintain a helpful and friendly tone, and avoid mentioning transcripts or how the information was obtained.
+`;
   if (!question || !transcript || !token) {
     return res
       .status(400)
@@ -72,7 +77,6 @@ app.post("/ask", async (req, res) => {
     console.log(answer, "completion choice");
 
     res.json({ answer });
-    // res.json({ answer: "Yahoo!" });
   } catch (error) {
     console.error("Error", error);
     res.json({ answer: error.message });
