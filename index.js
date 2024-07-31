@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 
 app.post("/ask", async (req, res) => {
   const { question, transcript, token } = req.body;
-  const prompt = `Based on the content of this YouTube video: "${transcript?.transcript?.transcript}", please answer the following question concisely: "${question}"
+  const prompt = `Based on the content of this YouTube video: "${transcript?.transcript}", please answer the following question concisely: "${question}"
 
 If there isn't enough information to answer the question directly, please respond in one of these ways:
 1. Share a relevant fact or piece of information from the video that's closest to addressing the question.
@@ -52,7 +52,8 @@ If there isn't enough information to answer the question directly, please respon
 
 Always maintain a helpful and friendly tone, and avoid mentioning transcripts or how the information was obtained.
 `;
-  if (!question || !transcript || !token) {
+  if (!question) return res.json({ answer: "There is no question." });
+  if (!transcript || !token) {
     return res
       .status(400)
       .json({ error: "Question and transcript are required" });
